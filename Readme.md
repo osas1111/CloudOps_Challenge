@@ -5,6 +5,8 @@ Legacy Application Cloud Infrastructure Setup
 
 This repository contains the necessary code to prepare the cloud infrastructure (<b>AWS</b>) for hosting a legacy application using <b>Terraform</b> and installing a security agent on the instance with <b>Ansible</b>.
 
+There are two simple modules. The one is `network-core` provisions the network part (VPC, subnet, etc.) and another is `compute` module creates EC2 instance. Instance public IP address is associated with DNS record, tfstate stored in S3 bucket
+
 Prerequisites
 -------------
 
@@ -22,16 +24,15 @@ Follow the steps below to set up the cloud infrastructure and install the securi
 
 1.  Clone the repository to your local machine:
 
-    `git clone https://github.com/your-username/legacy-app-cloud-setup.git`
+    `git clone git@github.com:osas1111/CloudOps_Challenge.git`
 
-2.  Change into the project directory:
+2.  Change into the project's terraform directory:
 
-    `cd legacy-app-cloud-setup`
+    `cd CloudOps_Challenge/terraform`
 
 3.  Initialize Terraform by running the following command:
 
     `terraform init`
-
 
 4.  Review the Terraform execution plan to ensure everything is set up correctly:
 
@@ -43,7 +44,7 @@ Follow the steps below to set up the cloud infrastructure and install the securi
 
     You will be prompted to confirm the infrastructure changes. Enter "yes" to proceed.
 
-6.  Run the Ansible playbook to install the security agent. Execute the following command:
+6.  Run the Ansible playbook to install the security agent with script at `CloudOps_Challenge/ansible`:
 
     `./install_security_agent.sh --private-key=<path_to_your_private_key>`
 
