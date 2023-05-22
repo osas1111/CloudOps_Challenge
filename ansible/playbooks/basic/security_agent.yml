@@ -1,0 +1,39 @@
+---
+- name: 'Install security agent'
+  hosts: '{{ target | default("webserver") }}'
+  strategy: 'linear'
+  gather_facts: false
+
+  tasks:
+    - name: 'Create csg_security_agent directory'
+      file:
+        path: /opt/csg_security_agent
+        state: directory
+
+    - name: 'Configure csg_security_agent with security_agent_config.conf'
+      template:
+        src: security_agent/security_agent_config.conf.j2
+        dest: /opt/csg_security_agent/
+        owner: root
+        mode: '0644'
+
+    - name: 'Copy security agent installer script'
+      template:
+        src: security_agent/security_agent_installer_linux_amd64_v1.0.0.sh.j2
+        dest: /opt/csg_security_agent/security_agent_installer.sh
+        owner: root
+        mode: '0755'
+
+    - name: 'Run security agent installer script'
+      shell: >
+        /opt/csg_security_agent/security_agent_installer.sh
+        --config /opt/csg_security_agent/security_agent_config.conf
+        --token {{ SECURITY_AGENT_TOKEN }}
+      args:
+        executable: /bin/bash
+      register: result
+
+    - debug: msg="{{ result.stdout.split('\n') }}"
+      when: not ansible_check_mode
+
+  become: true
