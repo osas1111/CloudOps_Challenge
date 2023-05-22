@@ -27,4 +27,11 @@ module "compute" {
   ]
 }
 
-# Добавь сюда переменные из vpc или используй те дефолтные (тогда тут не надо ничего делать)
+# Add public ip to DNS
+resource "aws_route53_record" "sa_infra_host" {
+  zone_id = aws_route53_zone.sa_infra_zone.zone_id
+  name    = "temp_sa.elcorp.io"
+  type    = "A"
+  ttl     = 300
+  records = [module.compute.sa_host_public_ip]
+}
